@@ -1,21 +1,31 @@
 $(function () {
-    let cards = [];
+
+    $.ajax({
+        url: "https://api.coingecko.com/api/v3/coins",
+        dataType: "json",
+        success: (response) => { return (response); },
+        error: () => console.error('API not valid')
+    });
+
+    $(document).ajaxSuccess(function (_event, request) {
+        const coinsApi = request.responseJSON;
+        displayCards(coinsApi);
+        moreInfo(coinsApi);
+
+    });
 
     // displayCards
-    displayCards();
-    function displayCards() {
+    function displayCards(response) {
 
         // ajax all coins
-        $.ajax({
-            url: "https://api.coingecko.com/api/v3/coins",
-            dataType: "json",
-            success: (response) => {
-                $.map(response, function (card, i) {
-                    // pushing to the arr
-                    cards.push(card);
+        console.log(response);
+        $.map(response, function (card, i) {
+            console.log(response);
+            console.log(card);
+            console.log(i);
 
-                    // building cards
-                    $('#cards').append(`<div class="col-sm col-md col-lg col-xl">
+            // building cards
+            $('#cards').append(`<div class="col-sm col-md col-lg col-xl">
                     <div class="card mb-3" style="width: 18rem">
                     <div
                       class="d-flex align-items-end flex-column bd-highlight mb-3"
@@ -32,49 +42,39 @@ $(function () {
                         <div class="collapse" id="collapseExample${i}"></div>
                       </div>
                       </div>`);
-                });
-            },
-            error: () => console.error('API not valid')
         });
+
     }
 
     // moreInfo
-    moreInfo();
-    function moreInfo() {
+    function moreInfo(response) {
 
-        $.ajax({
-            url: "https://api.coingecko.com/api/v3/coins",
-            dataType: "json",
-            success: (response) => {
-                $.map(response, (card, i) => {
-                    $.ajax({
-                        url: `https://api.coingecko.com/api/v3/coins/${card.id}`,
-                        success: function (card) {
-                            let moreInfoCard = {
-                                img: card.image.thumb,
-                                usd: card.market_data.current_price.usd,
-                                eur: card.market_data.current_price.eur,
-                                ils: card.market_data.current_price.ils,
-                            };
+        $.map(response, (card, i) => {
+            $.ajax({
+                url: `https://api.coingecko.com/api/v3/coins/${card.id}`,
+                success: function (card) {
+                    let moreInfoCard = {
+                        img: card.image.thumb,
+                        usd: card.market_data.current_price.usd,
+                        eur: card.market_data.current_price.eur,
+                        ils: card.market_data.current_price.ils,
+                    };
 
-                            // JSON
-                            window.localStorage.setItem("moreInfoCard", JSON.stringify(moreInfoCard));
+                    // JSON
+                    window.localStorage.setItem("moreInfoCard", JSON.stringify(moreInfoCard));
 
-                            moreInfoCard = JSON.parse(window.localStorage.getItem("moreInfoCard"));
+                    moreInfoCard = JSON.parse(window.localStorage.getItem("moreInfoCard"));
 
-                            // display in collapse
-                            $(`#collapseExample${i}`).append(`<div class="card card-body"><img src="
+                    // display in collapse
+                    $(`#collapseExample${i}`).append(`<div class="card card-body"><img src="
                             ${moreInfoCard.img}" alt="Coin Icon"><br/>usd: 
                             $${moreInfoCard.usd}<br/>eur: 
                             €${moreInfoCard.eur}<br/>ils:
                             ${moreInfoCard.ils})}₪
                                 </div>`);
-                        },
-                        error: () => console.error('API not valid')
-                    });
-                });
-            },
-            error: () => console.error('API not valid')
+                },
+                error: () => console.error('API not valid')
+            });
         });
     }
 
@@ -111,7 +111,7 @@ $(function () {
     }
 
     // search
-    search();
+    // search();
     function search() {
         const search = $('#search');
         $(search).click(function (e) {
