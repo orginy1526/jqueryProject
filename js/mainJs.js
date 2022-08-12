@@ -3,30 +3,29 @@ $(function () {
     $.ajax({
         url: "https://api.coingecko.com/api/v3/coins",
         dataType: "json",
-        success: (response) => { return (response); },
+        success: (response) => {
+            prograssBar();
+            setTimeout(() => {
+                displayCards(response);
+                moreInfo(response);
+                about();
+            }, 500);
+        },
         error: () => console.error('API not valid')
     });
 
-    $(document).ajaxSuccess(function (_event, request) {
-        const coinsApi = request.responseJSON;
-        displayCards(coinsApi);
-        moreInfo(coinsApi);
-
-    });
 
     // displayCards
     function displayCards(response) {
+        console.log(2);
+        $('.loadContainer').addClass('d-none');
 
         // ajax all coins
-        console.log(response);
         $.map(response, function (card, i) {
-            console.log(response);
-            console.log(card);
-            console.log(i);
 
             // building cards
             $('#cards').append(`<div class="col-sm col-md col-lg col-xl">
-                    <div class="card mb-3" style="width: 18rem">
+            <div class="card mb-3" style="width: 18rem">
                     <div
                       class="d-flex align-items-end flex-column bd-highlight mb-3"
                       style="height: 8px">
@@ -35,20 +34,20 @@ $(function () {
                       <div class="card-body">
                       <h5 class="card-title">${card.name}</h5>
                       <p>
-                        <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample${i}" role="button" aria-expanded="false" aria-controls="collapseExample${i}">
-                        More Info
-                        </a>
-                        </p>
-                        <div class="collapse" id="collapseExample${i}"></div>
+                      <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample${i}" role="button" aria-expanded="false" aria-controls="collapseExample${i}">
+                      More Info
+                      </a>
+                      </p>
+                      <div class="collapse" id="collapseExample${i}"></div>
                       </div>
                       </div>`);
         });
-
     }
+
 
     // moreInfo
     function moreInfo(response) {
-
+        console.log(3);
         $.map(response, (card, i) => {
             $.ajax({
                 url: `https://api.coingecko.com/api/v3/coins/${card.id}`,
@@ -79,40 +78,30 @@ $(function () {
     }
 
     // prograssBar
-    // prograssBar();
     function prograssBar() {
-        var progressbar = $("#progressbar"),
-            progressLabel = $(".progress-label");
+        console.log(1);
+        $('.loadContainer').removeClass('d-none');
+    }
 
-        $(progressLabel).html('Loading');
-
-        progressbar.progressbar({
-            value: false,
-            change: function () {
-                progressLabel.text(progressbar.progressbar("value") + "%");
-            },
-            complete: function () {
-                $(progressbar).addClass('d-none');
+    // about
+    function about() {
+        $.ajax({
+            url: "about.html",
+            success: link => {
+                $('#about').click(function () {
+                    prograssBar();
+                    setTimeout(() => {
+                        $('#cards').html(link);
+                    }, 501);
+                });
             }
         });
-
-        function progress() {
-            var val = progressbar.progressbar("value") || 0;
-
-            progressbar.progressbar("value", val + 2);
-
-            if (val < 99) {
-                setTimeout(progress, 12);
-            }
-        }
-
-        setTimeout(progress, 500);
 
     }
 
     // search
     // search();
-    function search() {
+    function search(response) {
         const search = $('#search');
         $(search).click(function (e) {
             const input = $('input').val();
@@ -123,8 +112,6 @@ $(function () {
         });
     }
 
-    // about
-    function about() { }
 
     // loadAjax
     function loadAjax() { }
@@ -137,14 +124,3 @@ $(function () {
 
 });
 
-
-  // progressbar
-    // console.log(document.readyState);
-    // if (document.readyState==='interactive'){
-    //     prograssBar()
-    // }else if(document.readyState==='complete'){
-    //     console.log(document.readyState);
-    // }
-    // $.when(prograssBar).done(displayCards);
-    // $( document ).ajaxEnd(prograssBar())
-    // displayCards
