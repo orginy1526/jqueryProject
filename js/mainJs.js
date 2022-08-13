@@ -23,7 +23,7 @@ $(function () {
                     moreInfo(response);
                     about();
                     search(response);
-                    toggle(response);
+                    toggleSwitch(response);
                 }, 500);
             },
             error: () => console.error('API not valid')
@@ -47,7 +47,7 @@ $(function () {
             $('#cards').append(`<div class="col-sm col-md col-lg col-xl">
             <div class="card mb-3" style="width: 18rem">
             <div
-            class="d-flex align-items-end flex-column bd-highlight mb-3 toggle"
+            class="d-flex align-items-end flex-column bd-highlight mb-3" id="toggleSwitch${i}"
             style="height: 8px">
                       </div>
                       <div class="card-header">${card.symbol}</div>
@@ -134,9 +134,31 @@ $(function () {
         });
     }
 
-    // toggle
-    function toggle(response) {
+    // toggle switch
+    function toggleSwitch(response) {
         console.log(8);
+        let arr = [];
+        $.map(response, function (_event, i) {
+            let toggle = $(`#toggleSwitch${i}`);
+            toggle.html('<label class="switch"><input type="checkbox"><span class="slider round"></span></label>');
+            $(toggle).one('click', function () {
+                arr.push(this);
+                console.log(arr);
+                // arr pop last added label
+                // make sure array length is 1 
+                // then make sure array length is no more than 5
+                // when disabled - give the option to add again
+
+                // if press odd - go to array
+                // if press even - out of the array
+
+                // if more then 5 - everyone else disabled
+                if (arr.length > 1) {
+                    toggle.html('<label class="switch"><input type="checkbox" disabled><span class="slider round"></span></label>');
+                    arr.pop(this);
+                }
+            });
+        });
     }
 
     // modal
