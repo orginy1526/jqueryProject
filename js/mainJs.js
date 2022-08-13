@@ -1,8 +1,18 @@
 $(function () {
-    api();
     loadAjax();
 
+    // loadAjax
+    function loadAjax() {
+        console.log(1);
+        api();
+        setInterval(() => {
+            console.log('reload');
+            api();
+        }, 120000);
+    }
+
     function api() {
+        console.log(2);
         $.ajax({
             url: "https://api.coingecko.com/api/v3/coins",
             dataType: "json",
@@ -13,6 +23,7 @@ $(function () {
                     moreInfo(response);
                     about();
                     search(response);
+                    toggle(response);
                 }, 500);
             },
             error: () => console.error('API not valid')
@@ -21,13 +32,13 @@ $(function () {
 
     // prograssBar
     function prograssBar() {
-        console.log(1);
+        console.log(3);
         $('.loadContainer').removeClass('d-none');
     }
 
     // displayCards
     function displayCards(response) {
-        console.log(2);
+        console.log(4);
         $('.loadContainer').addClass('d-none');
         // ajax all coins
         $.map(response, function (card, i) {
@@ -35,9 +46,9 @@ $(function () {
             // building cards
             $('#cards').append(`<div class="col-sm col-md col-lg col-xl">
             <div class="card mb-3" style="width: 18rem">
-                    <div
-                      class="d-flex align-items-end flex-column bd-highlight mb-3"
-                      style="height: 8px">
+            <div
+            class="d-flex align-items-end flex-column bd-highlight mb-3 toggle"
+            style="height: 8px">
                       </div>
                       <div class="card-header">${card.symbol}</div>
                       <div class="card-body">
@@ -56,7 +67,7 @@ $(function () {
 
     // moreInfo
     function moreInfo(response) {
-        console.log(3);
+        console.log(5);
         $.map(response, (card, i) => {
             $.ajax({
                 url: `https://api.coingecko.com/api/v3/coins/${card.id}`,
@@ -89,7 +100,7 @@ $(function () {
 
     // about
     function about() {
-        console.log(4);
+        console.log(6);
         $.ajax({
             url: "about.html",
             success: link => {
@@ -106,7 +117,7 @@ $(function () {
 
     // search
     function search(response) {
-        console.log(5);
+        console.log(7);
         $('#search').click(function (e) {
             e.preventDefault();
             let searchCrypto = $('#searchBar').val();
@@ -123,20 +134,16 @@ $(function () {
         });
     }
 
-
-    // loadAjax
-    function loadAjax() {
-        setInterval(() => {
-            console.log('reload');
-            api();
-        }, 120000);
-    }
-
     // toggle
-    function toggle() { }
+    function toggle(response) {
+        console.log(8);
+    }
 
     // modal
     function modal() { }
+
+    // live reports
+    function liveReports() { }
 
 });
 
