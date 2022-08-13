@@ -1,25 +1,34 @@
 $(function () {
+    api();
+    loadAjax();
 
-    $.ajax({
-        url: "https://api.coingecko.com/api/v3/coins",
-        dataType: "json",
-        success: (response) => {
-            prograssBar();
-            setTimeout(() => {
-                displayCards(response);
-                moreInfo(response);
-                about();
-            }, 500);
-        },
-        error: () => console.error('API not valid')
-    });
+    function api() {
+        $.ajax({
+            url: "https://api.coingecko.com/api/v3/coins",
+            dataType: "json",
+            success: (response) => {
+                prograssBar();
+                setTimeout(() => {
+                    displayCards(response);
+                    moreInfo(response);
+                    about();
+                    search(response);
+                }, 500);
+            },
+            error: () => console.error('API not valid')
+        });
+    }
 
+    // prograssBar
+    function prograssBar() {
+        console.log(1);
+        $('.loadContainer').removeClass('d-none');
+    }
 
     // displayCards
     function displayCards(response) {
         console.log(2);
         $('.loadContainer').addClass('d-none');
-
         // ajax all coins
         $.map(response, function (card, i) {
 
@@ -69,7 +78,7 @@ $(function () {
                             ${moreInfoCard.img}" alt="Coin Icon"><br/>usd: 
                             $${moreInfoCard.usd}<br/>eur: 
                             €${moreInfoCard.eur}<br/>ils:
-                            ${moreInfoCard.ils})}₪
+                            ${moreInfoCard.ils}₪
                                 </div>`);
                 },
                 error: () => console.error('API not valid')
@@ -77,14 +86,10 @@ $(function () {
         });
     }
 
-    // prograssBar
-    function prograssBar() {
-        console.log(1);
-        $('.loadContainer').removeClass('d-none');
-    }
 
     // about
     function about() {
+        console.log(4);
         $.ajax({
             url: "about.html",
             success: link => {
@@ -100,21 +105,32 @@ $(function () {
     }
 
     // search
-    // search();
     function search(response) {
-        const search = $('#search');
-        $(search).click(function (e) {
-            const input = $('input').val();
+        console.log(5);
+        $('#search').click(function (e) {
             e.preventDefault();
-            console.log(input);
-            console.log(cards[0]);
-
+            let searchCrypto = $('#searchBar').val();
+            let arr = [];
+            $.map(response, function (crypto) {
+                let cryptoSymbol = crypto.symbol;
+                if (searchCrypto === cryptoSymbol) {
+                    console.log(crypto);
+                    arr.push(crypto);
+                    $('#cards').empty();
+                    $('#cards').append(displayCards(arr), moreInfo(arr));
+                }
+            });
         });
     }
 
 
     // loadAjax
-    function loadAjax() { }
+    function loadAjax() {
+        setInterval(() => {
+            console.log('reload');
+            api();
+        }, 120000);
+    }
 
     // toggle
     function toggle() { }
