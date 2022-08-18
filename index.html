@@ -27,6 +27,7 @@
     <link rel="stylesheet" href="css/parallax.css" />
     <link rel="stylesheet" href="css/progressBar.css" />
     <link rel="stylesheet" href="css/toggleSwitch.css" />
+    <link rel="stylesheet" href="css/liveReports.css" />
 
     <!-- jquery -->
     <script
@@ -40,6 +41,12 @@
     <!-- progressBar jquery -->
     <script src="https://code.jquery.com/jquery-3.6.0.js" defer></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" defer></script>
+
+    <!-- live reports -->
+    <script
+      type="text/javascript"
+      src="https://canvasjs.com/assets/script/canvasjs.min.js"
+    ></script>
 
     <!-- mainJs -->
     <script src="js/mainJs.js" defer></script>
@@ -75,7 +82,9 @@
             ></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="liveReports" href="#">real time reports (Use the toggle switch to see current data)</a>
+            <a class="nav-link" id="liveReports" href="#"
+              >real time reports (Use the toggle switch to see current data)</a
+            >
           </li>
           <li class="nav-item">
             <a class="nav-link" id="about" href="#">About</a>
@@ -159,7 +168,7 @@
     </div>
 
     <!-- live reports -->
-    <div id="chartContainer"></div>
+    <div id="chartContainer" ></div>
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script

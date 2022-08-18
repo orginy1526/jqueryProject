@@ -87,9 +87,9 @@ $(function () {
 
                     // display in collapse
                     $(`#collapseExample${i}`).append(`<div class="card card-body"><img src="
-                            ${moreInfoCard.img}" alt="Coin Icon"><br/>usd: 
-                            $${moreInfoCard.usd}<br/>eur: 
-                            €${moreInfoCard.eur}<br/>ils:
+                            ${moreInfoCard.img}" alt="Coin Icon"><br/>USD: 
+                            $${moreInfoCard.usd}<br/>EUR: 
+                            €${moreInfoCard.eur}<br/>ILS:
                             ${moreInfoCard.ils}₪
                                 </div>`);
                 },
@@ -228,109 +228,100 @@ $(function () {
 
     // live reports
     function liveReports(cards) {
-        $.map(cards, function (card) {
-            const cardSymbol = card.symbol;
-            $.ajax({
-                url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${cardSymbol}&tsyms=USD`,
-                success: link => {
-                    $('#liveReports').click(function () {
-                        prograssBar();
-                        // setInterval(() => {
-                        console.log((Object.values(link)[0].USD));
-                        var options = {
-                            exportEnabled: true,
-                            animationEnabled: true,
-                            title: {
-                                text: "Units Sold VS Profit"
-                            },
-                            subtitles: [{
-                                text: "Click Legend to Hide or Unhide Data Series"
-                            }],
-                            axisX: {
-                                title: "States"
-                            },
-                            axisY: {
-                                title: "Units Sold",
-                                titleFontColor: "#4F81BC",
-                                lineColor: "#4F81BC",
-                                labelFontColor: "#4F81BC",
-                                tickColor: "#4F81BC"
-                            },
-                            axisY2: {
-                                title: "Profit in USD",
-                                titleFontColor: "#C0504E",
-                                lineColor: "#C0504E",
-                                labelFontColor: "#C0504E",
-                                tickColor: "#C0504E"
-                            },
-                            toolTip: {
-                                shared: true
-                            },
-                            legend: {
-                                cursor: "pointer",
-                                itemclick: toggleDataSeries
-                            },
-                            data: [{
-                                type: "spline",
-                                name: "Units Sold",
-                                showInLegend: true,
-                                xValueFormatString: "MMM YYYY",
-                                yValueFormatString: "#,##0 Units",
-                                dataPoints: [
-                                    { x: new Date(2016, 0, 1), y: 120 },
-                                    { x: new Date(2016, 1, 1), y: 135 },
-                                    { x: new Date(2016, 2, 1), y: 144 },
-                                    { x: new Date(2016, 3, 1), y: 103 },
-                                    { x: new Date(2016, 4, 1), y: 93 },
-                                    { x: new Date(2016, 5, 1), y: 129 },
-                                    { x: new Date(2016, 6, 1), y: 143 },
-                                    { x: new Date(2016, 7, 1), y: 156 },
-                                    { x: new Date(2016, 8, 1), y: 122 },
-                                    { x: new Date(2016, 9, 1), y: 106 },
-                                    { x: new Date(2016, 10, 1), y: 137 },
-                                    { x: new Date(2016, 11, 1), y: 142 }
-                                ]
-                            },
-                            {
-                                type: "spline",
-                                name: "Profit",
-                                axisYType: "secondary",
-                                showInLegend: true,
-                                xValueFormatString: "MMM YYYY",
-                                yValueFormatString: "$#,##0.#",
-                                dataPoints: [
-                                    { x: new Date(2016, 0, 1), y: 19034.5 },
-                                    { x: new Date(2016, 1, 1), y: 20015 },
-                                    { x: new Date(2016, 2, 1), y: 27342 },
-                                    { x: new Date(2016, 3, 1), y: 20088 },
-                                    { x: new Date(2016, 4, 1), y: 20234 },
-                                    { x: new Date(2016, 5, 1), y: 29034 },
-                                    { x: new Date(2016, 6, 1), y: 30487 },
-                                    { x: new Date(2016, 7, 1), y: 32523 },
-                                    { x: new Date(2016, 8, 1), y: 20234 },
-                                    { x: new Date(2016, 9, 1), y: 27234 },
-                                    { x: new Date(2016, 10, 1), y: 33548 },
-                                    { x: new Date(2016, 11, 1), y: 32534 }
-                                ]
-                            }]
-                        };
-                        $("#chartContainer").CanvasJSChart(options);
+        $('#liveReports').click(function () {
 
-                        function toggleDataSeries(e) {
-                            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
-                                e.dataSeries.visible = false;
-                            } else {
-                                e.dataSeries.visible = true;
-                            }
-                            e.chart.render();
-                        }
-                        // $('#cards').html();
-                        // }, 2000);
-                    });
-                },
-                error: () => console.error('API not valid')
-            });
+            $('#cards').empty();
+            if (cards.length > 0) {
+                const arr = [];
+                let symbolToLink = "";
+
+                $.map(cards, function (card, i) {
+                    const coinSymbol = card.symbol.toString();
+                    arr[i] = coinSymbol.toUpperCase();
+                    symbolToLink += coinSymbol + ",";
+                });
+                console.log(symbolToLink);
+
+                var chart = new CanvasJS.Chart("chartContainer", {
+                    width: 1200,
+
+                    axisY: {
+                        title: "USD",
+                    },
+                    axisX: {
+                        title: "seconds",
+                        minimum: 0,
+                    },
+                    title: {
+                        text: "Live Reports",
+                    },
+                    data: [
+                        {
+                            type: "line",
+                            showInLegend: true,
+                            legendText: `${arr[0]}`,
+                            dataPoints: [],
+                        },
+                        {
+                            type: "line",
+                            showInLegend: true,
+                            legendText: `${arr[1]}`,
+                            dataPoints: [],
+                        },
+                        {
+                            type: "line",
+                            showInLegend: true,
+                            legendText: `${arr[2]}`,
+                            dataPoints: [],
+                        },
+                        {
+                            type: "line",
+                            showInLegend: true,
+                            legendText: `${arr[3]}`,
+                            dataPoints: [],
+                        },
+                        {
+                            type: "line",
+                            showInLegend: true,
+                            legendText: `${arr[4]}`,
+                            dataPoints: [],
+                        },
+                    ],
+                });
+
+                chart.render();
+
+                let xValue = 0;
+                let yValue;
+
+                prograssBar();
+                myGraph = setInterval(
+                    function () {
+                        console.log("working...");
+                        $.ajax({
+                            url: `https://min-api.cryptocompare.com/data/pricemulti?fsyms=${symbolToLink}&tsyms=USD`,
+
+                            success: (value) => {
+                                $.map(arr, function (_item, i) {
+
+                                    yValue = value[arr[i]].USD;
+
+                                    chart.options.data[i].dataPoints.push({
+                                        x: xValue,
+                                        y: yValue,
+                                    });
+                                    chart.render();
+                                });
+                                xValue += 2;
+                            },
+                            error: () => {
+                                alert("please check api address");
+                            },
+                        });
+                    }, 2000);
+            }
         });
+
     }
 
 });
