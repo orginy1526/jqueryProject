@@ -75,7 +75,7 @@
             ></a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">real time reports</a>
+            <a class="nav-link" id="liveReports" href="#">real time reports (Use the toggle switch to see current data)</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" id="about" href="#">About</a>
@@ -106,6 +106,60 @@
 
     <!-- cards -->
     <div class="row" id="cards"></div>
+
+    <!-- Button trigger modal -->
+    <button
+      id="modalBtn"
+      type="button"
+      class="btn btn-primary d-none"
+      data-toggle="modal"
+      data-target="#exampleModal"
+    >
+      Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span id="close" aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body"><ul id="ulModal"></ul></div>
+          <div class="modal-footer">
+            <button
+              id="cancel"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              cancel
+            </button>
+            <button type="button" id="save" class="btn btn-primary">
+              Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- live reports -->
+    <div id="chartContainer"></div>
 
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script
